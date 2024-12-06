@@ -43,7 +43,16 @@ async function run() {
         const result = await visaCollection.findOne(query);
         res.send(result)
        })
+
       
+      app.get('/visa/:email',async(req,res)=>{
+        const email= req.params.email;
+        const option = {email:email};
+        const coursor = visaCollection.find(option);
+        const result = await coursor.toArray()
+        res.send(result)
+      })
+
 
        app.post('/visas',async(req,res)=>{
         const visa = req.body;
