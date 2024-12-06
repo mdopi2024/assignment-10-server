@@ -30,6 +30,7 @@ async function run() {
         // await client.connect();
 
        const visaCollection = client.db('visaDB').collection('visa');
+       const myVisaCollection = client.db('visaDB').collection('myVisa');
         
        app.get('/visas',async(req,res)=>{
            const cursor = visaCollection.find();
@@ -42,11 +43,18 @@ async function run() {
         const result = await visaCollection.findOne(query);
         res.send(result)
        })
+      
 
        app.post('/visas',async(req,res)=>{
         const visa = req.body;
         const result =await visaCollection.insertOne(visa)
         res.send(result)
+       })
+
+       app.post('/myvisa',async(req,res)=>{
+           const myVisa = req.body;
+           const result = await myVisaCollection.insertOne(myVisa);
+           res.send(result)
        })
 
 
