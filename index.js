@@ -29,42 +29,66 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
 
-       const visaCollection = client.db('visaDB').collection('visa');
-       const myVisaCollection = client.db('visaDB').collection('myVisa');
-        
-       app.get('/visas',async(req,res)=>{
-           const cursor = visaCollection.find();
-           const result = await cursor.toArray()
-           res.send(result)
-       })
-       app.get('/visas/:id',async(req,res)=>{
-        const id = req.params.id;
-        const query ={_id:new ObjectId(id)};
-        const result = await visaCollection.findOne(query);
-        res.send(result)
-       })
+        const visaCollection = client.db('visaDB').collection('visa');
+        const myVisaCollection = client.db('visaDB').collection('myVisa');
 
-      
-      app.get('/visa/:email',async(req,res)=>{
-        const email= req.params.email;
-        const option = {email:email};
-        const coursor = visaCollection.find(option);
-        const result = await coursor.toArray()
-        res.send(result)
-      })
+        app.get('/visas', async (req, res) => {
+            const cursor = visaCollection.find();
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.get('/visas/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await visaCollection.findOne(query);
+            res.send(result)
+        })
 
 
-       app.post('/visas',async(req,res)=>{
-        const visa = req.body;
-        const result =await visaCollection.insertOne(visa)
-        res.send(result)
-       })
+        app.get('/visa/:email', async (req, res) => {
+            const email = req.params.email;
+            const option = { email: email };
+            const coursor = visaCollection.find(option);
+            const result = await coursor.toArray()
+            res.send(result)
+        })
 
-       app.post('/myvisa',async(req,res)=>{
-           const myVisa = req.body;
-           const result = await myVisaCollection.insertOne(myVisa);
-           res.send(result)
-       })
+
+        app.post('/visas', async (req, res) => {
+            const visa = req.body;
+            const result = await visaCollection.insertOne(visa)
+            res.send(result)
+        })
+
+        app.post('/myvisa', async (req, res) => {
+            const myVisa = req.body;
+            const result = await myVisaCollection.insertOne(myVisa);
+            res.send(result)
+        })
+
+        app.patch('/visas/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateData = req.body
+            const filter = { _id: new ObjectId(id) }
+            const newData = {
+                $set: {
+                    name:updateData.name,
+                    photo:updateData.photo,
+                    visaType:updateData.visaType,
+                    time:updateData.time,
+                    age:updateData.age,
+                    validity:updateData.validity,
+                    method:updateData.method,
+                    passpord:updateData.passpord,
+                    photograph:updateData.photograph,
+                    applicationForm:updateData.applicationForm,
+                    discrip:updateData.discrip,
+                    fee:updateData.fee
+                }
+            }
+            const result = await visaCollection.updateOne(filter,newData)
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
