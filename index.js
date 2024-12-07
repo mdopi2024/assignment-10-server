@@ -65,6 +65,11 @@ async function run() {
             const result = await myVisaCollection.insertOne(myVisa);
             res.send(result)
         })
+        app.get('/myvisa',async(req,res)=>{
+            const coursor = myVisaCollection.find()
+            const result = await coursor.toArray()
+            res.send(result)
+        })
 
         app.patch('/visas/:id', async (req, res) => {
             const id = req.params.id;
