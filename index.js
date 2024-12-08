@@ -73,7 +73,12 @@ async function run() {
             res.send(result)
         })
         app.get('/myvisa',async(req,res)=>{
-            const coursor = myVisaCollection.find()
+            const {search}=req.query
+            let option={};
+            if(search){
+                option={name:{$regex:search,$options:'i'}}
+            }
+            const coursor = myVisaCollection.find(option)
             const result = await coursor.toArray()
             res.send(result)
         })
