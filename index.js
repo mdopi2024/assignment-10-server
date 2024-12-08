@@ -33,7 +33,14 @@ async function run() {
         const myVisaCollection = client.db('visaDB').collection('myVisa');
 
         app.get('/visas', async (req, res) => {
-            const cursor = visaCollection.find();
+             
+            const {search}=req.query
+            let option ={}
+            if(search){
+                option ={visaType:{$regex:search,$options:'i'}}
+            }
+
+            const cursor = visaCollection.find(option);
             const result = await cursor.toArray()
             res.send(result)
         })
