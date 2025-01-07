@@ -72,16 +72,35 @@ async function run() {
             const result = await myVisaCollection.insertOne(myVisa);
             res.send(result)
         })
-        app.get('/myvisa',async(req,res)=>{
-            const {search}=req.query
-            let option={};
-            if(search){
-                option={name:{$regex:search,$options:'i'}}
-            }
-            const coursor = myVisaCollection.find(option)
-            const result = await coursor.toArray()
-            res.send(result)
-        })
+        // app.get('/myvisa/:email',async(req,res)=>{
+        //     const email = req.params.email;
+        //     const query ={email:email}
+        //     const {search}=req.query
+        //     console.log('search',search)
+        //     let option={};
+        //     if(search){
+        //         option={name:{$regex:search,$options:'i'}}
+        //     }
+        //     const coursor = myVisaCollection.find(query,option)
+        //     const result = await coursor.toArray()
+        //     res.send(result)
+        // })
+
+        app.get('/myvisa/:email', async (req, res) => {
+            const email = req.params.email;
+            const search = req.query.search || '';
+            const query = { email: email };
+            const option = search ? { name: { $regex: search, $options: 'i' } } : {};
+        
+            // Combine both filters
+            const cursor = myVisaCollection.find({
+                ...query,
+                ...option,
+            });
+        
+            const result = await cursor.toArray();
+            res.send(result);
+        });
 
         app.patch('/visas/:id', async (req, res) => {
             const id = req.params.id;
